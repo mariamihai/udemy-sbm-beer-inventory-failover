@@ -3,7 +3,7 @@ version: 2.1
 executors:
   docker-publisher:
     environment:
-      IMAGE_NAME: mariamihai/ci-to-docker-example-project
+      IMAGE_NAME: mariamihai/sbm-beer-inventory-failover
     docker:
       - image: circleci/openjdk:11-browsers-legacy
 
