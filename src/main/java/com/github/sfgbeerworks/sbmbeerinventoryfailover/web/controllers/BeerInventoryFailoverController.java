@@ -1,4 +1,4 @@
-package com.github.sfgbeerworks.sbmbeerinventoryfailover.web;
+package com.github.sfgbeerworks.sbmbeerinventoryfailover.web.controllers;
 
 import com.github.sfgbeerworks.sbmbeerinventoryfailover.web.model.BeerInventoryDto;
 import lombok.RequiredArgsConstructor;
