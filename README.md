@@ -6,7 +6,7 @@ Spring Boot Microservice project.
   - [Description](#description)
   - [API version](#api-version)
   - [Docker images](#docker-images)
-  - [Implementation Details](#implementation-details)
+  - [Implementation details](#implementation-details)
     - [Properties](#properties)
     - [API call](#api-call)
       - [Failover endpoint](#failover-endpoint)
