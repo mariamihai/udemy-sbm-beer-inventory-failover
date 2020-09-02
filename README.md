@@ -1,4 +1,4 @@
-[![Docker](https://img.shields.io/docker/v/mariamihai/sbm-beer-inventory-failover?sort=date)](https://img.shields.io/docker/v/mariamihai/sbm-beer-inventory-failover?sort=date)
+[![Docker](https://img.shields.io/docker/v/mariamihai/sbm-beer-inventory-failover?sort=date)](https://hub.docker.com/repository/docker/mariamihai/sbm-beer-inventory-failover)
 
 # SBM Beer Inventory Failover Service
 Spring Boot Microservice project
