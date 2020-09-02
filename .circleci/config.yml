@@ -1,0 +1,122 @@
+version: 2.1
+
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: mariamihai/ci-to-docker-example-project
+    docker:
+      - image: circleci/openjdk:11-browsers-legacy
+
+jobs:
+  build:
+    executor: docker-publisher
+
+    working_directory: ~/application
+
+    environment:
+      MAVEN_OPTS: -Xmx3200m
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: mvn dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}
+      
+      - run: mvn package
+      
+      - store_test_results:
+      # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
+      # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: target/surefire-reports
+
+      - setup_remote_docker
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -f ~/application/src/main/docker/Dockerfile -t $IMAGE_NAME:latest .
+      - run:
+          name: Archive Docker Image
+          command: docker save -o image.tar $IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+  publish-latest:
+    executor: docker-publisher
+
+    steps:
+      - attach_workspace:
+            at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker Image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            TAG="0.1.${CIRCLE_BUILD_NUM}"
+            docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$TAG
+            docker push $IMAGE_NAME:latest
+            docker push $IMAGE_NAME:$TAG
+  publish-tag:
+    executor: docker-publisher
+
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker Image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+            IMAGE_TAG=${CIRCLE_TAG/v/''}
+            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$TAG
+            docker push $IMAGE_NAME:latest
+            docker push $IMAGE_NAME:$TAG
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - build:
+          context: Docker
+          filters:
+            branches:
+              only: master
+      - publish-latest:
+          context: Docker
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+  build-tags:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - publish-tag:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
