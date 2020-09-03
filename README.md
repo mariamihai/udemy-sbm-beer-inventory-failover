@@ -54,8 +54,16 @@ server.port=8083
     
  * __Success response:__
     * Code: 200 <br/>
-    * Content: (TODO - response will be added)
+    * Content:
     
        ``` 
-       
+       [
+           {
+               "id": "40352018-6eca-4098-b358-6e8b96d54805",
+               "createdDate": "2020-09-03T12:34:03.183487Z",
+               "lastModifiedDate": "2020-09-03T12:34:03.18353Z",
+               "beerId": "00000000-0000-0000-0000-000000000000",
+               "quantityOnHand": 999
+           }
+       ]
        ```
