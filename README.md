@@ -53,7 +53,7 @@ server.port=8083
     * optional: -
     
  * __Success response:__
-    * Code: 200 <br/>
+    * Code: 200 OK <br/>
     * Content:
     
        ``` 
