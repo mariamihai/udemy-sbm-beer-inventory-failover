@@ -8,8 +8,9 @@ Spring Boot Microservice project.
   - [Docker images](#docker-images)
   - [Implementation details](#implementation-details)
     - [Properties](#properties)
-    - [API call](#api-call)
-      - [Failover endpoint](#failover-endpoint)
+    - [Profiles](#profiles)
+  - [API call](#api-call)
+    - [Failover endpoint](#failover-endpoint)
 
 ## Description
 The current project is part of the "Spring Boot Microservices with Spring Cloud" [Udemy course](https://www.udemy.com/course/spring-boot-microservices-with-spring-cloud-beginner-to-guru/). 
@@ -42,8 +43,11 @@ spring.application.name=beer-inventory-failover
 server.port=8083
 ```
 
-### API call
-#### Failover endpoint
+### Profiles
+Active profile: `local-discovery`.
+
+## API call
+### Failover endpoint
 * __URI:__ _/inventory-failover_
 
  * __Method:__ _GET_
